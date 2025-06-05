@@ -1,6 +1,8 @@
-from pydantic_ai import Agent, RunContext
-from pydantic_ai.common_tools.duckduckgo import duckduckgo_search_tool
+from pydantic_ai import Agent, RunContext, Tool
 from typing_extensions import TypedDict
+from typing import Annotated
+import time
+from duckduckgo_search import DDGS
 
 class ResearchInput(TypedDict):
     query: str
@@ -10,6 +12,25 @@ class DebateMessage(TypedDict):
     message: str
 
 message_storage: list[DebateMessage] = []
+
+
+def safe_duckduckgo_search(query: Annotated[str, "The search query"]) -> str:
+    for attempt in range(3):
+        try:
+            with DDGS() as ddgs:
+                results = ddgs.text(query)
+                return "\n".join([r["body"] for r in results])
+        except Exception as e:
+            print(f"Search failed (attempt {attempt+1}): {e}")
+            time.sleep(5)
+    return "Search failed after retries."
+
+
+duckduckgo_tool = Tool(
+    name="duckduckgo_search",
+    description="Searches the web using DuckDuckGo",
+    function=safe_duckduckgo_search
+)
 
 ## Affirmative Debater ##
 
@@ -22,7 +43,7 @@ debater_a_research_agent = Agent(
     name="Research Agent A",
     model="openai:gpt-3.5-turbo",
     system_prompt="You are a research assistant for a debate. You support the pro side. Search the internet to find 10 relevant facts or arguments to support your position.",
-    tools=[duckduckgo_search_tool()]
+    tools=[duckduckgo_tool]
 )
 
 @debater_a.system_prompt
@@ -46,7 +67,7 @@ debater_n_research_agent = Agent(
     name="Research Agent N",
     model="openai:gpt-3.5-turbo",
     system_prompt="You are a research assistant for a debate. You support the con side. Search the internet to find 10 relevant facts or arguments to support your position.",
-    tools=[duckduckgo_search_tool()]
+    tools=[duckduckgo_tool]
 )
 
 @debater_n.system_prompt

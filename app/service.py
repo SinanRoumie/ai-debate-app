@@ -1,4 +1,7 @@
 from agents import debater_a, debater_a_research_agent, debater_n_research_agent, debater_n, judge, message_storage
+import re
+import os
+import json
 
 rounds = [
     {"speaker": "Debater A", "agent": debater_a, "type": "constructive"},
@@ -16,13 +19,33 @@ def format_history(storage):
         [f"{m['agent_type']} ({m['speech_type']}): {m['message']}" for m in storage]
     )
 
-feedback_memory = {
-    "Debater A": [],
-    "Debater N": []
-}
+MAX_FEEDBACK_HISTORY = 2
+FEEDBACK_FILE = "feedback_log.json"
 
+# Load feedback from file if exists
+if os.path.exists(FEEDBACK_FILE):
+    try:
+        with open(FEEDBACK_FILE, "r") as f:
+            feedback_memory = json.load(f)
+    except (json.JSONDecodeError, FileNotFoundError):
+        feedback_memory = {
+            "Debater A": [],
+            "Debater N": []
+    }
+else:
+    feedback_memory = {
+        "Debater A": [],
+        "Debater N": []
+    }
+
+def get_feedback_text(speaker):
+        feedback_list = feedback_memory.get(speaker, [])
+        if feedback_list:
+            return "\nHere is feedback from the judge on your previous rounds:\n" + "\n".join([f"- {entry}" for entry in feedback_list]) + "\n"
+        return ""
 
 async def run_structured_debate(topic: str):
+    global feedback_memory 
     message_storage.clear()
 
     # Run research once
@@ -92,24 +115,24 @@ async def run_structured_debate(topic: str):
 
         history = format_history(message_storage)
         research = research_data.get(speaker, "")
+        feedback_list = feedback_memory.get(speaker, [])
+        if feedback_list:
+            formatted_feedback = "\nHere is feedback from the judge on your previous rounds:\n"
+            formatted_feedback += "\n".join([f"- {f}" for f in feedback_list]) + "\n"
+        else:
+            formatted_feedback = ""
+
+
 
         input_prompt = (
             f"You are {speaker}. You are in the {speech_type} round of a structured debate.\n"
             f"Topic: {topic}\n"
             f"{rules}"
+            f"{formatted_feedback}\n"
             f"\nUse the following research to support your case:\n{research}\n\n"
-            f"Here is the debate so far:\n{history}\n\n"
+            f"Here is the debate so far:\n{history}\n"
             "Now write your argument:"
         )
-
-        feedback_list = feedback_memory.get(speaker, [])
-        if feedback_list:
-            formatted_feedback = "\n".join([f"- {entry}" for entry in feedback_list])
-            input_prompt += f"\nHere is feedback from the judge on your previous rounds:\n{formatted_feedback}\n"
-
-        print(f"\n==== {speaker} - {speech_type.upper()} Prompt ====\n")
-        print(input_prompt)
-        print("\n=============================\n")
 
 
         result = await agent.run(input_prompt)
@@ -135,19 +158,22 @@ async def run_structured_debate(topic: str):
     message_storage.append({"agent_type": "Judge", "message": judgment.data})
 
     # Store feedback
-    MAX_FEEDBACK_HISTORY = 2
-    for line in judgment.data.splitlines():
-        if line.startswith("Feedback for Debater A:"):
-            feedback = line.replace("Feedback for Debater A:", "").strip()
-            feedback_memory["Debater A"].append(feedback)
-            feedback_memory["Debater A"] = feedback_memory["Debater A"][-MAX_FEEDBACK_HISTORY:]
-        elif line.startswith("Feedback for Debater N:"):
-            feedback = line.replace("Feedback for Debater N:", "").strip()
-            feedback_memory["Debater N"].append(feedback)
-            feedback_memory["Debater N"] = feedback_memory["Debater N"][-MAX_FEEDBACK_HISTORY:]
+    match_a = re.search(r"Feedback for Debater A:(.*?)(Feedback for Debater N:|$)", judgment.data, re.DOTALL)
+    if match_a:
+        feedback_a = match_a.group(1).strip()
+        feedback_memory.setdefault("Debater A", []).append(feedback_a)
+        feedback_memory["Debater A"] = feedback_memory["Debater A"][-MAX_FEEDBACK_HISTORY:]
+
+    match_n = re.search(r"Feedback for Debater N:(.*)", judgment.data, re.DOTALL)
+    if match_n:
+        feedback_n = match_n.group(1).strip()
+        feedback_memory.setdefault("Debater N", []).append(feedback_n)
+        feedback_memory["Debater N"] = feedback_memory["Debater N"][-MAX_FEEDBACK_HISTORY:]
 
     # Save logs
-    import json
+    with open(FEEDBACK_FILE, "w") as f:
+        json.dump(feedback_memory, f, indent=2)
+
     with open("debate_log.json", "w") as f:
         json.dump(message_storage, f, indent=2)
 
