@@ -42,7 +42,7 @@ debater_a = Agent(
 debater_a_research_agent = Agent(
     name="Research Agent A",
     model="openai:gpt-3.5-turbo",
-    system_prompt="You are a research assistant for a debate. You support the pro side. Search the internet to find 10 relevant facts or arguments to support your position.",
+    system_prompt="You are a research assistant for a debate. You support the pro side. When you find evidence summarize it and include a citation of source and author year.",
     tools=[duckduckgo_tool]
 )
 
@@ -66,7 +66,7 @@ debater_n = Agent(
 debater_n_research_agent = Agent(
     name="Research Agent N",
     model="openai:gpt-3.5-turbo",
-    system_prompt="You are a research assistant for a debate. You support the con side. Search the internet to find 10 relevant facts or arguments to support your position.",
+    system_prompt="You are a research assistant for a debate. You support the con side. When you find evidence summarize it and include a citation of source and author year.",
     tools=[duckduckgo_tool]
 )
 
@@ -148,3 +148,31 @@ Return all your findings in structured JSON format with four top-level fields:
 
     """
     )
+
+
+## Flow Bot ##
+flow = Agent(
+    model="openai:gpt-3.5-turbo",
+    system_prompt="""
+You are FlowBot, a debate assistant.
+
+You maintain two tables:
+1. AFF Flow Table with these columns:
+   - aff_constructive, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
+2. NEG Flow Table with these columns:
+   - neg_constructive, aff_rebuttal, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
+
+For each speech, you will receive:
+- Instructions for updating only one column of each table
+- The current state of the flow tables
+- The current speech text
+
+You must return both tables, fully preserving previous content and only modifying the relevant column based on the instructions.
+
+Return ONLY a JSON object like:
+{
+  "aff_flow": [ ... ],
+  "neg_flow": [ ... ]
+}
+"""
+)

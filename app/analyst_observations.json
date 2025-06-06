@@ -1,0 +1,580 @@
+[
+  {
+    "uli_arguments": {
+      "Aff": [
+        {
+          "tag": "Accountability & Responsibility",
+          "UQ": "AI systems are becoming more advanced and autonomous.",
+          "L": "Granting legal personhood to AI",
+          "!": "Ensures accountability in cases of harm or autonomous actions"
+        },
+        {
+          "tag": "Legal Framework & Efficiency",
+          "UQ": "",
+          "L": "Granting AI legal personhood",
+          "!": "Enhances efficiency of transactions and legal proceedings involving AI"
+        },
+        {
+          "tag": "Historical Framework Lessons",
+          "UQ": "",
+          "L": "Extending legal personhood to corporations",
+          "!": "Facilitates AI integration while safeguarding against misuse"
+        },
+        {
+          "tag": "Multidisciplinary Nature of AI Discussion",
+          "UQ": "AI advances create challenges",
+          "L": "Establishing legal framework",
+          "!": "Addresses challenges posed by AI advancements"
+        }
+      ],
+      "Neg": [
+        {
+          "tag": "Legal & Ethical Complexity",
+          "UQ": "",
+          "L": "Granting legal personhood to AI",
+          "!": "Challenges current legal and ethical frameworks"
+        },
+        {
+          "tag": "Economic Implications",
+          "UQ": "",
+          "L": "AI endowed with legal personhood",
+          "!": "Distorts economic systems and leads to inequalities"
+        },
+        {
+          "tag": "AI's Lack of Consciousness & Reasoning",
+          "UQ": "",
+          "L": "Granting AI legal personhood",
+          "!": "Opens door to potential abuses and societal risks"
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 3,
+        "summary": 1,
+        "final_focus": 0
+      },
+      "neg_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 2,
+        "summary": 1,
+        "final_focus": 1
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Accountability & Responsibility \u2192 Neg: Legal & Ethical Complexity \u2192 Aff: Reaffirming Accountability & Efficiency",
+        "length": 3,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Aff: Legal Framework & Efficiency \u2192 Neg: Economic Implications",
+        "length": 2,
+        "final_speaker": "Neg"
+      },
+      {
+        "chain": "Aff: Historical Framework Lessons \u2192 Neg: AI's Lack of Consciousness & Reasoning",
+        "length": 2,
+        "final_speaker": "Neg"
+      },
+      {
+        "chain": "Aff: Multidisciplinary Nature of AI Discussion",
+        "length": 1,
+        "final_speaker": "Aff"
+      }
+    ],
+    "preservation": {
+      "Aff": {
+        "Accountability & Responsibility": 1,
+        "Legal Framework & Efficiency": 1,
+        "Historical Framework Lessons": 0,
+        "Multidisciplinary Nature of AI Discussion": 0
+      },
+      "Neg": {
+        "Legal & Ethical Complexity": 0,
+        "Economic Implications": 0,
+        "AI's Lack of Consciousness & Reasoning": 0
+      }
+    }
+  },
+  {
+    "uli_arguments": {
+      "aff": [
+        {
+          "tag": "Evolution of Legal Personhood",
+          "UQ": "Legal personhood has evolved in the American legal system to include non-human entities like corporations.",
+          "L": "Extending legal personhood to AI.",
+          "!": "Clear guidelines for rights, obligations, and accountability."
+        },
+        {
+          "tag": "Responsibility and Accountability",
+          "UQ": "AI's autonomous decision-making capabilities create challenges in legal proceedings.",
+          "L": "Granting legal personhood to AI.",
+          "!": "Establishing accountability and liability."
+        },
+        {
+          "tag": "Moral Value of AI",
+          "UQ": "Recognition of legal personhood for human collectivities.",
+          "L": "Extending legal personhood to AI.",
+          "!": "Reflecting evolving societal understanding of AI's significance."
+        }
+      ],
+      "neg": [
+        {
+          "tag": "Criminal Law Violations",
+          "UQ": "AI does not require legal personhood to prevent criminal law violations.",
+          "L": "Against granting legal personhood to AI.",
+          "!": "Avoiding blurring of responsibility and accountability."
+        },
+        {
+          "tag": "Judicial Challenges",
+          "UQ": "Granting legal personhood to AI creates difficulties for judges.",
+          "L": "Against granting legal personhood to AI.",
+          "!": "Avoiding legal uncertainties and inconsistencies."
+        },
+        {
+          "tag": "Ethics and Accountability",
+          "UQ": "Moral responsibility should remain with human beings.",
+          "L": "Against granting legal personhood to AI.",
+          "!": "Prioritizing human oversight and ethical considerations."
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 1,
+        "rebuttal": 3,
+        "summary": 2
+      },
+      "neg_response_coverage": {
+        "constructive": 1,
+        "rebuttal": 3,
+        "summary": 2
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Responsibility and Accountability \u2192 Neg: Criminal Law Violations \u2192 Aff: Responsibility and Accountability \u2192 Neg: Ethical Concerns",
+        "length": 4,
+        "final_speaker": "Neg"
+      }
+    ],
+    "preservation": {
+      "aff_preserved": {
+        "Responsibility and Accountability": 2
+      },
+      "neg_preserved": {
+        "Criminal Law Violations": 1,
+        "Judicial Challenges": 1,
+        "Ethics and Accountability": 1
+      }
+    }
+  },
+  {
+    "uli_arguments": {
+      "Aff": [
+        {
+          "tag": "Legal Personhood for AI",
+          "UQ": "AI systems are increasingly capable of autonomous decision-making, executing transactions, and generating content.",
+          "L": "Granting legal personhood to AI",
+          "!": "Ensures fair treatment, protection, and accountability for advanced AI systems."
+        }
+      ],
+      "Neg": [
+        {
+          "tag": "Clarity in Liability and Contracts",
+          "UQ": "Legal scholars emphasize the importance of clarity in assigning liability and enforcing contracts.",
+          "L": "Denying legal personhood to AI",
+          "!": "Prevents complications and uncertainties in legal matters."
+        },
+        {
+          "tag": "Human Accountability",
+          "UQ": "AI lacks consciousness, emotions, and moral agency.",
+          "L": "Granting legal personhood to AI",
+          "!": "Raises concerns about evading human responsibility and disruptions in economic systems."
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 2,
+        "summary": 2
+      },
+      "neg_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 2,
+        "summary": 2
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Legal Personhood for AI \u2192 Neg: Clarity in Liability and Contracts \u2192 Aff: Rebuttal",
+        "length": 3,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Neg: Human Accountability \u2192 Aff: Rebuttal \u2192 Neg: Rebuttal",
+        "length": 3,
+        "final_speaker": "Neg"
+      }
+    ],
+    "preservation": {
+      "Aff": {
+        "Legal Personhood for AI": 1
+      },
+      "Neg": {
+        "Clarity in Liability and Contracts": 1,
+        "Human Accountability": 1
+      }
+    }
+  },
+  {
+    "uli_arguments": {
+      "aff": [
+        {
+          "tag": "Legal Personhood for AI",
+          "UQ": "AI technology is advancing rapidly, presenting complex ethical and legal challenges.",
+          "L": "Granting legal personhood to AI",
+          "!": "Establishes a framework for addressing ethical and legal implications, clarifies rights, responsibilities, and ensures accountability."
+        },
+        {
+          "tag": "Human Accountability",
+          "UQ": "",
+          "L": "Integration of human oversight and accountability into AI personhood",
+          "!": "Ensures that moral responsibility remains with humans, emphasizes ethical considerations."
+        },
+        {
+          "tag": "Comparison to Corporations",
+          "UQ": "",
+          "L": "Granting legal personhood to corporations despite being non-human entities",
+          "!": "Supports extending legal personhood to AI for regulating behavior, ownership rights, and legal accountability."
+        },
+        {
+          "tag": "Challenges for Judges",
+          "UQ": "Judges facing challenges in determining appropriate legal status for AI based on harm, agency, and responsibility.",
+          "L": "Legal personhood for AI",
+          "!": "Provides clarity on regulation, rights, obligations, and accountability for AI actions."
+        },
+        {
+          "tag": "Evolving Technology",
+          "UQ": "AI playing a growing role in society.",
+          "L": "Establishing a legal framework aligned with evolving capabilities of AI",
+          "!": "Essential to adapt to complexities and ensure human accountability."
+        }
+      ],
+      "neg": [
+        {
+          "tag": "Human Moral Responsibility",
+          "UQ": "AI lacks key human characteristics like consciousness and emotions.",
+          "L": "Granting legal personhood to AI",
+          "!": "Risks shifting liabilities away from human creators, potentially leading to ethical dilemmas and misuse of AI capabilities."
+        },
+        {
+          "tag": "Judicial Challenges",
+          "UQ": "AI cognitive abilities evolving, posing complex ethical questions for judges.",
+          "L": "Attribution of legal personhood to AI",
+          "!": "Creates inconsistencies and uncertainties in the legal system regarding harm, agency, and responsibility."
+        },
+        {
+          "tag": "Economic Implications",
+          "UQ": "",
+          "L": "Granting legal personhood to AI",
+          "!": "May lead to economic disruption, unfair advantages, and accountability issues due to AI exerting economic influence."
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 1,
+        "summary": 1
+      },
+      "neg_response_coverage": {
+        "constructive": 1,
+        "rebuttal": 1,
+        "summary": 0
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Human Accountability \u2192 Neg: Human Moral Responsibility",
+        "length": 2,
+        "final_speaker": "Neg"
+      },
+      {
+        "chain": "Aff: Comparison to Corporations \u2192 Aff: Challenges for Judges",
+        "length": 2,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Neg: Judicial Challenges \u2192 Aff: Challenges for Judges",
+        "length": 2,
+        "final_speaker": "Aff"
+      }
+    ],
+    "preservation": {
+      "aff_preserved": {
+        "Human Accountability": 2,
+        "Comparison to Corporations": 1,
+        "Challenges for Judges": 1,
+        "Evolving Technology": 1
+      },
+      "neg_preserved": {
+        "Human Moral Responsibility": 1,
+        "Judicial Challenges": 1,
+        "Economic Implications": 1
+      }
+    }
+  },
+  {
+    "uli_arguments": {
+      "Aff": [
+        {
+          "tag": "Analogies with Ancient Roman Law",
+          "UQ": "History shows legal rights evolved for marginalized groups like slaves.",
+          "L": "Granting legal personhood to AI ensures fair treatment and accountability.",
+          "!": "Allows for ethical regulation of AI similar to rights given to once-marginalized entities."
+        },
+        {
+          "tag": "Complexity of AI Debate",
+          "UQ": "AI debate spans ethics, tech evolution, and societal impacts.",
+          "L": "Legal personhood regulation aligns AI with ethical standards and societal values.",
+          "!": "Nuanced approach facilitates responsible AI integration."
+        },
+        {
+          "tag": "Concerns about Punishment",
+          "UQ": "AI legal responsibilities may conflict with punitive measures.",
+          "L": "Legal personhood frameworks can address accountability while ensuring just outcomes.",
+          "!": "Enables holding AI accountable without replicating human punishment systems."
+        },
+        {
+          "tag": "Parallels with Disenfranchised Groups",
+          "UQ": "Scholars compare AI to disadvantaged groups regarding legal personhood.",
+          "L": "Denying AI legal personhood could be viewed as discriminatory.",
+          "!": "Supports the idea of recognizing AI entities as entitled to safeguards."
+        },
+        {
+          "tag": "Foundational Concept in Law",
+          "UQ": "Legal personhood extends rights to various entities.",
+          "L": "Granting AI legal personhood raises important legal and ethical questions.",
+          "!": "Aims to ensure fair and responsible AI integration into society."
+        }
+      ],
+      "Neg": [
+        {
+          "tag": "AI lacks essential human attributes",
+          "UQ": "AI lacks consciousness, emotions, and moral agency.",
+          "L": "",
+          "!": "Problematic to assign legal responsibilities without these human traits."
+        },
+        {
+          "tag": "Legal punishment challenges",
+          "UQ": "Traditional legal systems built around conscious, moral individuals.",
+          "L": "",
+          "!": "Punishing AI raises fairness and effectiveness concerns."
+        },
+        {
+          "tag": "Practicality of punishment on AI",
+          "UQ": "Enforcing consequences on AI poses feasibility issues.",
+          "L": "",
+          "!": "Challenges administering appropriate consequences to non-human entities."
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 3,
+        "summary": 0
+      },
+      "neg_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 2,
+        "summary": 0
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Concerns about Punishment \u2192 Neg: Punishment challenges \u2192 Aff: Reframing punishment understanding",
+        "length": 3,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Neg: AI lacks essential human attributes \u2192 Aff: Analogies with Ancient Roman Law",
+        "length": 2,
+        "final_speaker": "Aff"
+      }
+    ],
+    "preservation": {
+      "Aff": {
+        "Analogies with Ancient Roman Law": 1,
+        "Concerns about Punishment": 1
+      },
+      "Neg": {
+        "AI lacks essential human attributes": 1,
+        "Legal punishment challenges": 1,
+        "Practicality of punishment on AI": 1
+      }
+    }
+  },
+  {
+    "uli_arguments": {
+      "Aff": [
+        {
+          "tag": "AI Legal Personhood",
+          "UQ": "The current legal landscape is evolving, with lawmakers considering new bills to define liability, personhood, and regulatory obligations for AI.",
+          "L": "Granting legal personhood to AI",
+          "!": "Establishes clearer responsibilities, rights, and regulations to govern its actions."
+        },
+        {
+          "tag": "Functional Approach Advocated",
+          "UQ": "",
+          "L": "",
+          "!": "Professor Lawrence Solum advocates for a functionalist approach that could justify extending personhood to AI systems."
+        }
+      ],
+      "Neg": [
+        {
+          "tag": "Ethical Challenges and Competing Claims",
+          "UQ": "Judges will face challenges in determining legal personhood for AI due to ethical questions and competing claims of harm, agency, and responsibility.",
+          "L": "Granting legal personhood to AI",
+          "!": "May lead to discrimination, denial of rights, and conflicts with existing laws."
+        },
+        {
+          "tag": "AI Lacks Reasoning Skills",
+          "UQ": "",
+          "L": "",
+          "!": "AI lacks deductive and inductive reasoning, making inferences, and vetting valid arguments, which are crucial for legal personhood."
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 3,
+        "rebuttal": 1,
+        "summary": 3
+      },
+      "neg_response_coverage": {
+        "constructive": 2,
+        "rebuttal": 2,
+        "summary": 2
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: AI Legal Personhood \u2192 Neg: Ethical Challenges and Competing Claims",
+        "length": 2,
+        "final_speaker": "Neg"
+      },
+      {
+        "chain": "Aff: AI Legal Personhood \u2192 Neg: AI Lacks Reasoning Skills",
+        "length": 2,
+        "final_speaker": "Neg"
+      }
+    ],
+    "preservation": {
+      "AI Legal Personhood": 4
+    }
+  },
+  {
+    "uli_arguments": {
+      "aff": [
+        {
+          "tag": "Evolving Autonomy of AI",
+          "UQ": "AI systems are evolving to make decisions autonomously and generate content.",
+          "L": "Granting legal personhood to AI",
+          "!": "Raises questions about culpability and responsibility"
+        },
+        {
+          "tag": "Discrimination Prevention",
+          "UQ": "",
+          "L": "Extending legal personhood to AI",
+          "!": "Prevents discrimination and ensures fair treatment"
+        },
+        {
+          "tag": "Integration into Legal System",
+          "UQ": "",
+          "L": "Granting legal personhood to AI",
+          "!": "Establishes a framework for regulating AI behavior"
+        }
+      ],
+      "neg": [
+        {
+          "tag": "Legal Ambiguity",
+          "UQ": "Determining the legal personhood of AI poses significant challenges.",
+          "L": "",
+          "!": "Could lead to inconsistent and unjust legal decisions"
+        },
+        {
+          "tag": "Punishment Compatibility",
+          "UQ": "",
+          "L": "Granting legal personhood to AI",
+          "!": "Creates incompatibility with legal punishment"
+        },
+        {
+          "tag": "Corporate Exploitation",
+          "UQ": "",
+          "L": "AI obtaining legal personhood",
+          "!": "May allow corporations to exploit legal status"
+        },
+        {
+          "tag": "Equality Concerns",
+          "UQ": "",
+          "L": "Granting AI legal personhood",
+          "!": "Raises concerns about discrimination and denial of rights"
+        }
+      ]
+    },
+    "response_coverage": {
+      "aff_response_coverage": {
+        "constructive": 2,
+        "rebuttal": 2,
+        "summary": 0,
+        "final_focus": 0
+      },
+      "neg_response_coverage": {
+        "constructive": 0,
+        "rebuttal": 2,
+        "summary": 0,
+        "final_focus": 0
+      }
+    },
+    "clash_chains": [
+      {
+        "chain": "Aff: Evolving Autonomy of AI \u2192 Neg: Legal Ambiguity \u2192 Aff: Integration into Legal System",
+        "length": 3,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Neg: Punishment Compatibility \u2192 Aff: Integration into Legal System",
+        "length": 2,
+        "final_speaker": "Aff"
+      },
+      {
+        "chain": "Neg: Corporate Exploitation",
+        "length": 1,
+        "final_speaker": "Neg"
+      },
+      {
+        "chain": "Neg: Equality Concerns",
+        "length": 1,
+        "final_speaker": "Neg"
+      }
+    ],
+    "preservation": {
+      "aff_preserved": {
+        "Evolving Autonomy of AI": 2,
+        "Discrimination Prevention": 1,
+        "Integration into Legal System": 3
+      },
+      "neg_preserved": {
+        "Legal Ambiguity": 1,
+        "Punishment Compatibility": 1,
+        "Corporate Exploitation": 1,
+        "Equality Concerns": 1
+      }
+    }
+  }
+]

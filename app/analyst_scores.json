@@ -64,5 +64,149 @@
       "argument_preservation": 7,
       "average": 7.25
     }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 10,
+      "depth_of_clash": 10,
+      "argument_preservation": 10,
+      "average": 10
+    },
+    "neg_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 10,
+      "depth_of_clash": 10,
+      "argument_preservation": 10,
+      "average": 10
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 6,
+      "average": 7.75
+    },
+    "neg_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 5,
+      "average": 7.5
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 5,
+      "average": 7
+    },
+    "neg_scores": {
+      "uli_adherence": 7,
+      "response_coverage": 7,
+      "depth_of_clash": 7,
+      "argument_preservation": 3,
+      "average": 6
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 5,
+      "average": 7.5
+    },
+    "neg_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 7,
+      "average": 8
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 5,
+      "average": 7.5
+    },
+    "neg_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 6,
+      "average": 7.75
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 5,
+      "depth_of_clash": 7,
+      "argument_preservation": 6,
+      "average": 6.75
+    },
+    "neg_scores": {
+      "uli_adherence": 8,
+      "response_coverage": 5,
+      "depth_of_clash": 6,
+      "argument_preservation": 6,
+      "average": 6.25
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 10,
+      "depth_of_clash": 7,
+      "argument_preservation": 5,
+      "average": 8
+    },
+    "neg_scores": {
+      "uli_adherence": 7,
+      "response_coverage": 8,
+      "depth_of_clash": 7,
+      "argument_preservation": 6,
+      "average": 7
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 7,
+      "depth_of_clash": 6,
+      "argument_preservation": 10,
+      "average": 8
+    },
+    "neg_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 7,
+      "depth_of_clash": 6,
+      "argument_preservation": 10,
+      "average": 8
+    }
+  },
+  {
+    "aff_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 8,
+      "depth_of_clash": 8,
+      "argument_preservation": 9,
+      "average": 8.5
+    },
+    "neg_scores": {
+      "uli_adherence": 7,
+      "response_coverage": 6,
+      "depth_of_clash": 6,
+      "argument_preservation": 5,
+      "average": 6
+    }
   }
 ]
