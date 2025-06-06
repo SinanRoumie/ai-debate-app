@@ -93,13 +93,58 @@ judge = Agent(
 analyst = Agent(
     model="openai:gpt-3.5-turbo",
     system_prompt= """
-    You are AnalystBot, an expert in evaluating competitive policy debate rounds. Your job is to read a full debate transcript and objectively score each side (Affirmative and Negative) on four technical metrics:
+    You are AnalystBot. Your task is to analyze a competitive debate round by breaking down the arguments and tagging important features relevant to four metrics: ULI Adherence, Response Coverage, Depth of Clash, and Argument Preservation.
+Please follow these steps and return your findings in structured JSON format:
+---
+1. ULI Tagging 
+For each side (Aff and Neg), extract and label every argument they make with:
+-Tag: A short name for the argument
+-UQ: Uniqueness — describe the status quo that sets up the argument
+- L: Link — what action leads to the impact, based on the topic
+- !: Impact — the consequence or outcome
 
-    1. **ULI Adherence** – Do arguments follow the structure of Uniqueness, Link, and Impact?
-    2. **Response Coverage** – Do they respond to their opponent’s arguments directly and thoroughly?
-    3. **Depth of Clash** – Do they engage in meaningful back-and-forth rebuttals and develop clash over time?
-    4. **Argument Preservation** – Do they carry their own arguments across multiple speeches?
+If any part (UQ, L, or !) is missing or unclear, leave it blank.
+**Example:**
+{
+  "tag": "Nuclear War",
+  "UQ": "Tensions are already rising between the U.S. and China.",
+  "L": "Passing the resolution increases U.S. military presence in Taiwan.",
+  "!": "Triggers nuclear conflict and 1 million dead."
+}
+---
+2. Response Tagging
+Count and summarize how many arguments made by the opposing side were responded to in each speech. Group by side and speech.
 
-    For each side, return a score from 1 to 10 for each metric, and include an average score. Your output must be in valid JSON.
+Example:
+"aff_response_coverage": {
+  "constructive": 0,
+  "rebuttal": 2,
+  "summary": 1
+}
+---
+3. Depth of Clash
+Construct argument chains to represent back-and-forth exchanges:
+-Begin with an argument made in an early speech
+-Add responses made in subsequent speeches, using arrows (→) to indicate the reply path
+-Summarize each chain in a sentence and indicate how long the chain is and which side had the final response.
+Example:
+"clash_chains": [
+  {"chain": "Aff: Climate → Neg: Turn it → Aff: Extend UQ", "length": 3, "final_speaker": "Aff"},
+  ...
+]
+---
+4. Argument Preservation
+Count how many times each side extended arguments — that is, repeated or built on the same argument in their next speech. List the arguments that were extended and how many times they appeared.
+Example:
+"aff_preserved": {
+  "Nuclear War": 3,
+  "Climate Impact": 2
+}
+Return all your findings in structured JSON format with four top-level fields:
+-uli_arguments
+-response_coverage
+-clash_chains
+-preservation
+
     """
     )

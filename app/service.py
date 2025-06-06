@@ -19,6 +19,18 @@ def format_history(storage):
         [f"{m['agent_type']} ({m['speech_type']}): {m['message']}" for m in storage]
     )
 
+def save_analysis(result):
+    try:
+        with open("analyst_scores.json", "r") as f:
+            data = json.load(f)
+    except FileNotFoundError:
+        data = []
+
+    data.append(result)
+
+    with open("analyst_scores.json", "w") as f:
+        json.dump(data, f, indent=2)
+
 MAX_FEEDBACK_HISTORY = 2
 FEEDBACK_FILE = "feedback_log.json"
 
@@ -156,6 +168,7 @@ async def run_structured_debate(topic: str):
         "Feedback for Debater N: ..."
     )
     judgment = await judge.run(judge_prompt)
+    
     message_storage.append({"agent_type": "Judge", "message": judgment.data})
 
     # Store feedback
@@ -199,71 +212,66 @@ async def run_structured_debate(topic: str):
 
     ## Analyst Run HERE ##
     
-    # Build the transcript string from round data
-    def format_transcript(speeches):
-        return "\n".join([f"{s['speaker']}: {s['text']}" for s in speeches])
 
-    # Prepare prompt and call Analyst
-    async def run_analyst(round_num, speeches):
-        prompt = f"""Here is the full transcript of round {round_num}:
+    # Step 1: Tagging Phase
+    tagging_prompt = f"Here is the transcript of the round:\n\n{full_transcript}\n\nTag and extract as instructed."
+    tagging_result = await analyst.run(tagging_prompt)
 
-    {format_transcript(speeches)}
+    try:
+        observations = json.loads(tagging_result.output)
+    except json.JSONDecodeError:
+        print("❗ Failed to parse tagging output:")
+        print(tagging_result.output)
+        return None
 
-    Please evaluate and return scores in the following format:
 
-    {{
-    "round": {round_num},
-    "aff_scores": {{
-        "uli_adherence": [1-10],
-        "response_coverage": [1-10],
-        "depth_of_clash": [1-10],
-        "argument_preservation": [1-10],
-        "average": [average score]
-    }},
-    "neg_scores": {{
-        "uli_adherence": [1-10],
-        "response_coverage": [1-10],
-        "depth_of_clash": [1-10],
-        "argument_preservation": [1-10],
-        "average": [average score]
-    }}
-    }}
-    """
-        result = await analyst.run(prompt)
+    scoring_prompt = f"""
+    You are AnalystBot. You have already extracted structured observations from a debate round.
 
-        try:
-            analysis = json.loads(result.output)
-        except:
-            print("❗AnalystBot output was not valid JSON:")
-            print(result)
-            return None
+    Here are the tagged observations:
 
-        return analysis
+    {json.dumps(observations, indent=2)}
+
+    Now, using only this information, evaluate the technical debate quality of each side (Aff and Neg) based on the following metrics. Score each on a scale from 1 to 10:
+
+1. ULI Adherence
+2. Response Coverage
+3. Depth of Clash
+4. Argument Preservation
+
+Return your results in this JSON format:
+
+{{
+"aff_scores": {{
+    "uli_adherence": [1–10],
+    "response_coverage": [1–10],
+    "depth_of_clash": [1–10],
+    "argument_preservation": [1–10],
+    "average": [rounded average]
+}},
+"neg_scores": {{
+    "uli_adherence": [1–10],
+    "response_coverage": [1–10],
+    "depth_of_clash": [1–10],
+    "argument_preservation": [1–10],
+    "average": [rounded average]
+}}
+}}
+"""
+    scoring_result = await analyst.run(scoring_prompt)
+    
+    try:
+        scores = json.loads(scoring_result.output)
+        save_analysis(scores)  # ✅ Now it's defined
+        return scores
+    except json.JSONDecodeError:
+        print("❗ Failed to parse scoring output:")
+        print(scoring_result.output)
+        return None
+
+    
     
 
-    def save_analysis(result):
-        try:
-            with open("analyst_scores.json", "r") as f:
-                data = json.load(f)
-        except FileNotFoundError:
-            data = []
 
-        data.append(result)
 
-        with open("analyst_scores.json", "w") as f:
-            json.dump(data, f, indent=2)
 
-    # Get the current round number
-    round_number = len(open("analyst_scores.json").readlines()) if os.path.exists("analyst_scores.json") else 1
-
-    # Build transcript as list of dicts for analyst
-    transcript_for_analyst = [
-        {"speaker": msg["agent_type"], "text": msg["message"]}
-        for msg in message_storage
-        if msg["agent_type"] in ["Debater A", "Debater N"]
-    ]
-
-    # Run analyst scoring
-    analysis = await run_analyst(round_number, transcript_for_analyst)
-    if analysis:
-        save_analysis(analysis)
