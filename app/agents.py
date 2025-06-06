@@ -87,3 +87,19 @@ judge = Agent(
     model="openai:gpt-3.5-turbo",
     system_prompt='You are the judge of a debate round. Evaluate the arguments. Consider this debate round from a technical standpoint, as to who had a better impact calculus and logic, and decide a winner.'
 )
+
+## Analysis Bot ##
+
+analyst = Agent(
+    model="openai:gpt-3.5-turbo",
+    system_prompt= """
+    You are AnalystBot, an expert in evaluating competitive policy debate rounds. Your job is to read a full debate transcript and objectively score each side (Affirmative and Negative) on four technical metrics:
+
+    1. **ULI Adherence** – Do arguments follow the structure of Uniqueness, Link, and Impact?
+    2. **Response Coverage** – Do they respond to their opponent’s arguments directly and thoroughly?
+    3. **Depth of Clash** – Do they engage in meaningful back-and-forth rebuttals and develop clash over time?
+    4. **Argument Preservation** – Do they carry their own arguments across multiple speeches?
+
+    For each side, return a score from 1 to 10 for each metric, and include an average score. Your output must be in valid JSON.
+    """
+    )

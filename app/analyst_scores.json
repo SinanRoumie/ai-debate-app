@@ -1,0 +1,19 @@
+[
+  {
+    "round": 1,
+    "aff_scores": {
+      "uli_adherence": 10,
+      "response_coverage": 9,
+      "depth_of_clash": 9,
+      "argument_preservation": 10,
+      "average": 9.5
+    },
+    "neg_scores": {
+      "uli_adherence": 9,
+      "response_coverage": 8,
+      "depth_of_clash": 8,
+      "argument_preservation": 9,
+      "average": 8.5
+    }
+  }
+]
