@@ -1,9 +1,14 @@
-from agents import debater_a, debater_a_research_agent, debater_n_research_agent, debater_n, judge, message_storage, analyst, flow
+from agents import debater_a, debater_a_research_agent, debater_n_research_agent, debater_n, judge, message_storage
+from csv_agent_runner import run_csv_agent
 import re
 import os
 import json
 import csv
 import pandas as pd
+from langchain_experimental.agents import create_csv_agent
+from langchain_openai import ChatOpenAI
+from langchain.agents import AgentExecutor
+
 
 rounds = [
     {"speaker": "Debater A", "agent": debater_a, "type": "constructive"},
@@ -73,7 +78,7 @@ def get_feedback_text(speaker):
 
 
 
-def get_flow_instructions(speech_type, side, current_flow=""):
+def get_flow_instructions(speech_type, side):
     col_map = {
         "constructive": "constructive",
         "rebuttal": "rebuttal",
@@ -84,50 +89,69 @@ def get_flow_instructions(speech_type, side, current_flow=""):
     column = f"{side}_{col_map[speech_type]}"
 
     if speech_type == "constructive":
-        return (
-            f"In this {side.upper()} constructive speech, extract each argument as a new row. "
-            "For each row, include:\n"
-            f"- tag: a short label for the argument\n"
-            f"- {column}: combine uniqueness (UQ): describe the status quo that sets up the argument, link (L): what action leads to the impact, and impact (!): the consequence or outcome\n\n"
-            "Leave all other columns empty. Preserve all previous rows."
+        return (f""""You are a debate flow assistant. You will fill out two 8-column tables representing the AFF and NEG flows. Each row is an argument tagged by a short name. The columns are:
+['tag', '{side}_constructive' 'aff_rebuttal', 'neg_rebuttal', 'aff_summary', 'neg_summary', 'aff_final_focus', 'neg_final_focus']
+            """
+            f"You are updating a CSV file representing the {side.upper()} flow of a debate round.\n"
+            f"For this {side.upper()} constructive speech, extract each unique argument as a new row.\n"
+            f"- Fill in the `tag` and `{column}` column only.\n"
+            f"- tag:give a short name for the argument\n"
+            f"- {column}: identify the argument components: Uniqueness(UQ): describe the status quo that sets up the argument, link(L): what action leads to the impact, and impact(!): the consequence or outcome\n\n"
+            "- Leave all other columns blank.\n"
+            "- Do not repeat or modify existing rows."
         )
 
     # For non-constructive speeches, include current flow table as context
-    return (
-        f"The current flow table is below:\n\n{current_flow}\n\n"
-        f"In this {side.upper()} {speech_type} speech, update the column `{column}` in the {side.upper()} flow table.\n"
-        "For each argument (matched by tag), either:\n"
+    return ("""You are a debate flow assistant. You will fill out two 8-column tables representing the AFF and NEG flows. Each row is an argument tagged by a short name. The columns are:
+['tag', 'aff_constructive', 'neg_constructive', 'aff_rebuttal', 'neg_rebuttal', 'aff_summary', 'neg_summary', 'aff_final_focus', 'neg_final_focus']
+"""""
+        f"You are updating a CSV file representing the {side.upper()} flow.\n"
+        f"""1. All arguments presented by the AFF team should go on the AFF flow. All responses to those arguments (by AFF or NEG) should also go on the AFF flow.
+2. All arguments presented by the NEG team should go on the NEG flow. All responses to those arguments (by AFF or NEG) go on the NEG flow.
+3. Use consistent short tags for arguments across the debate.
+4. When updating rebuttals or summaries, match them to the correct tag from the flow.
+5. If the tag doesn't exist, print a warning and skip that entry.
+6. Do not duplicate the same argument on both flows just because it's referenced by both sides."""
+        f"7.For this {side.upper()} {speech_type} speech, update only the `{column}` column.\n"
+        "8.For each argument (matched by the `tag` field), either:\n"
         "- Extend it (summarize the extension)\n"
         "- Respond to it (briefly summarize)\n"
         "- Note if it was dropped\n\n"
-        "Do not modify other columns or other table. Keep all previous content intact."
-    )
+        "- Do not modify or remove existing content in any other column.\n"
+     )
 
 
-def load_csv_as_dicts(path):
-    try:
-        with open(path, newline='') as f:
-            return list(csv.DictReader(f))
-    except FileNotFoundError:
-        return []
+# def load_csv_as_dicts(path):
+#     try:
+#         with open(path, newline='') as f:
+#             return list(csv.DictReader(f))
+#     except FileNotFoundError:
+#         return []
 
-def save_dicts_to_csv(path, rows):
-    if not rows:
-        return
-    with open(path, 'w', newline='') as f:
-        writer = csv.DictWriter(f, fieldnames=rows[0].keys())
-        writer.writeheader()
-        writer.writerows(rows)
+# def save_dicts_to_csv(path, rows):
+#     if not rows:
+#         return
+#     with open(path, 'w', newline='') as f:
+#         writer = csv.DictWriter(f, fieldnames=rows[0].keys())
+#         writer.writeheader()
+#         writer.writerows(rows)
 
 
 ## Run Structured Debate ##
 
 async def run_structured_debate(topic: str):
     global feedback_memory 
-    
-    aff_flow = load_csv_as_dicts("aff_flow.csv")
-    neg_flow = load_csv_as_dicts("neg_flow.csv")
 
+    # Write initial CSVs
+    with open("aff_flow.csv", "w") as f:
+        f.write("tag,aff_constructive,aff_rebuttal,neg_rebuttal,aff_sumamry,neg_summary,aff_final_focus,neg_final_focus\n")
+    with open("neg_flow.csv", "w") as f:
+        f.write("tag,neg_constructive,aff_rebuttal,neg_rebuttal,aff_summary,neg_summary,aff_final_focus,neg_final_focus\n")
+    
+    # Setup CSV agents
+    llm = ChatOpenAI(temperature=0, model="gpt-4", openai_api_key=os.getenv("OPENAI_API_KEY"))
+    aff_csv_agent = create_csv_agent(llm, "aff_flow.csv", verbose=True, allow_dangerous_code=True)
+    neg_csv_agent = create_csv_agent(llm, "neg_flow.csv", verbose=True, allow_dangerous_code=True)
 
     message_storage.clear()
 
@@ -158,50 +182,19 @@ async def run_structured_debate(topic: str):
         "input_prompt": constructive_a_prompt
     })
 
-    flow_input = f"""
-    Instructions:
-    {get_flow_instructions("constructive", "aff")}
+    aff_csv_agent_executor = AgentExecutor.from_agent_and_tools(
+    agent=aff_csv_agent.agent,
+    tools=aff_csv_agent.tools,
+    handle_parsing_errors=True,
+    verbose=True
+    )
 
-    AFF Flow:
-    {json.dumps(aff_flow, indent=2)}
-
-    NEG Flow:
-    {json.dumps(neg_flow, indent=2)}
-
-    Speech:
-    \"\"\"{constructive_a.data}\"\"\"
-    """
-
-    flow_result = await flow.run(flow_input)
-    
-    raw = flow_result.output.strip()
-
-    # If GPT wrapped it in markdown-style triple backticks
-    if raw.startswith("```"):
-        raw = raw.strip("`")  # Remove all backticks
-        parts = raw.split("json")
-        raw = parts[-1].strip() if len(parts) > 1 else raw
-
-    # Fix common JSON issues:
-    # - Convert keys like aff_flow to "aff_flow"
-    raw = re.sub(r'(?<=[^\\])",\s*"([L!])":', r', "\1":', raw)
-
-    try:
-        tables = json.loads(raw)
-    except json.JSONDecodeError as e:
-        print("❗ Failed to parse flow output:")
-        print(raw)
-        raise e
-    
-    tables = json.loads(flow_result.output)
-    aff_flow = tables.get("aff_flow", aff_flow)
-    neg_flow = tables.get("neg_flow", neg_flow)
-
-    print("🔁 Updated AFF Flow:")
-    print(json.dumps(aff_flow, indent=2))
-
-    print("🔁 Updated NEG Flow:")
-    print(json.dumps(neg_flow, indent=2))
+    aff_csv_agent_executor.run(f"""
+        Instructions:
+        {get_flow_instructions("constructive", "aff")}
+        here is the speech you will be working with:
+        {constructive_a.data}
+        """)
 
 
 
@@ -221,28 +214,21 @@ async def run_structured_debate(topic: str):
         "input_prompt": constructive_n_prompt
     })
 
-    flow_input = f"""
-    Instructions:
-    {get_flow_instructions("constructive", "neg")}
+    neg_csv_agent_executor = AgentExecutor.from_agent_and_tools(
+    agent=neg_csv_agent.agent,
+    tools=neg_csv_agent.tools,
+    handle_parsing_errors=True,
+    verbose=True
+    )
 
-    AFF Flow:
-    {json.dumps(aff_flow, indent=2)}
+    neg_csv_agent_executor.run(f"""
+        Instructions:
+        {get_flow_instructions("constructive", "neg")}
+        here is the speech you will be working with:
+        {constructive_a.data}
+        """)
 
-    NEG Flow:
-    {json.dumps(neg_flow, indent=2)}
-
-    Speech:
-    \"\"\"{constructive_n.data}\"\"\"
-    """
-
-    flow_result = await flow.run(flow_input)
-    print("FLOWBOT OUTPUT:")
-    print(flow_result.output)
-    tables = json.loads(flow_result.output)
-    aff_flow = tables.get("aff_flow", aff_flow)
-    neg_flow = tables.get("neg_flow", neg_flow)
-
-
+    print("✅ Constructives processed. Continuing debate logic...")
 
 
     # Map research for future use (if you want to still show it)
@@ -295,32 +281,26 @@ async def run_structured_debate(topic: str):
 
         side = "aff" if speaker == "Debater A" else "neg"
 
-        flow_input = f"""
+        aff_csv_agent_executor.run(f"""
         Instructions:
-        {get_flow_instructions(speech_type, side, current_flow=json.dumps(aff_flow if side == "aff" else neg_flow, indent=2))}
+        {get_flow_instructions(speech_type, side)}
+        here is the speech you will be working with:
+        {result.data}
+        """)
 
-        AFF Flow:
-        {json.dumps(aff_flow, indent=2)}
+        neg_csv_agent_executor.run(f"""
+        Instructions:
+        {get_flow_instructions(speech_type, side)}
+        here is the speech you will be working with:
+        {result.data}
+        """)
 
-        NEG Flow:
-        {json.dumps(neg_flow, indent=2)}
-
-        Speech:
-        \"\"\"{result.data}\"\"\"
-        """
-
-        flow_result = await flow.run(flow_input)
-        tables = json.loads(flow_result.output)
-
-        # Normalize keys from FlowBot output
-        aff_flow = tables.get("AFF Flow", aff_flow)
-        neg_flow = tables.get("NEG Flow", neg_flow)
 
         print("🔁 Updated AFF Flow:")
-        print(json.dumps(aff_flow, indent=2))
+        
 
         print("🔁 Updated NEG Flow:")
-        print(json.dumps(neg_flow, indent=2))
+        
 
 
         message_storage.append({
@@ -329,13 +309,6 @@ async def run_structured_debate(topic: str):
             "message": result.data,
             "input_prompt": input_prompt
         })
-
-    
-    save_dicts_to_csv("aff_flow.csv", aff_flow)
-    save_dicts_to_csv("neg_flow.csv", neg_flow)
-    
-    pd.DataFrame(aff_flow).to_excel("aff_flow.xlsx", index=False)
-    pd.DataFrame(neg_flow).to_excel("neg_flow.xlsx", index=False)
 
 
 

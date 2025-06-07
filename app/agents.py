@@ -88,91 +88,91 @@ judge = Agent(
     system_prompt='You are the judge of a debate round. Evaluate the arguments. Consider this debate round from a technical standpoint, as to who had a better impact calculus and logic, and decide a winner.'
 )
 
-## Analysis Bot ##
+# ## Analysis Bot ##
 
-analyst = Agent(
-    model="openai:gpt-3.5-turbo",
-    system_prompt= """
-    You are AnalystBot. Your task is to analyze a competitive debate round by breaking down the arguments and tagging important features relevant to four metrics: ULI Adherence, Response Coverage, Depth of Clash, and Argument Preservation.
-Please follow these steps and return your findings in structured JSON format:
----
-1. ULI Tagging 
-For each side (Aff and Neg), extract and label every argument they make with:
--Tag: A short name for the argument
--UQ: Uniqueness — describe the status quo that sets up the argument
-- L: Link — what action leads to the impact, based on the topic
-- !: Impact — the consequence or outcome
+# analyst = Agent(
+#     model="openai:gpt-3.5-turbo",
+#     system_prompt= """
+#     You are AnalystBot. Your task is to analyze a competitive debate round by breaking down the arguments and tagging important features relevant to four metrics: ULI Adherence, Response Coverage, Depth of Clash, and Argument Preservation.
+# Please follow these steps and return your findings in structured JSON format:
+# ---
+# 1. ULI Tagging 
+# For each side (Aff and Neg), extract and label every argument they make with:
+# -Tag: A short name for the argument
+# -UQ: Uniqueness — describe the status quo that sets up the argument
+# - L: Link — what action leads to the impact, based on the topic
+# - !: Impact — the consequence or outcome
 
-If any part (UQ, L, or !) is missing or unclear, leave it blank.
-**Example:**
-{
-  "tag": "Nuclear War",
-  "UQ": "Tensions are already rising between the U.S. and China.",
-  "L": "Passing the resolution increases U.S. military presence in Taiwan.",
-  "!": "Triggers nuclear conflict and 1 million dead."
-}
----
-2. Response Tagging
-Count and summarize how many arguments made by the opposing side were responded to in each speech. Group by side and speech.
+# If any part (UQ, L, or !) is missing or unclear, leave it blank.
+# **Example:**
+# {
+#   "tag": "Nuclear War",
+#   "UQ": "Tensions are already rising between the U.S. and China.",
+#   "L": "Passing the resolution increases U.S. military presence in Taiwan.",
+#   "!": "Triggers nuclear conflict and 1 million dead."
+# }
+# ---
+# 2. Response Tagging
+# Count and summarize how many arguments made by the opposing side were responded to in each speech. Group by side and speech.
 
-Example:
-"aff_response_coverage": {
-  "constructive": 0,
-  "rebuttal": 2,
-  "summary": 1
-}
----
-3. Depth of Clash
-Construct argument chains to represent back-and-forth exchanges:
--Begin with an argument made in an early speech
--Add responses made in subsequent speeches, using arrows (→) to indicate the reply path
--Summarize each chain in a sentence and indicate how long the chain is and which side had the final response.
-Example:
-"clash_chains": [
-  {"chain": "Aff: Climate → Neg: Turn it → Aff: Extend UQ", "length": 3, "final_speaker": "Aff"},
-  ...
-]
----
-4. Argument Preservation
-Count how many times each side extended arguments — that is, repeated or built on the same argument in their next speech. List the arguments that were extended and how many times they appeared.
-Example:
-"aff_preserved": {
-  "Nuclear War": 3,
-  "Climate Impact": 2
-}
-Return all your findings in structured JSON format with four top-level fields:
--uli_arguments
--response_coverage
--clash_chains
--preservation
+# Example:
+# "aff_response_coverage": {
+#   "constructive": 0,
+#   "rebuttal": 2,
+#   "summary": 1
+# }
+# ---
+# 3. Depth of Clash
+# Construct argument chains to represent back-and-forth exchanges:
+# -Begin with an argument made in an early speech
+# -Add responses made in subsequent speeches, using arrows (→) to indicate the reply path
+# -Summarize each chain in a sentence and indicate how long the chain is and which side had the final response.
+# Example:
+# "clash_chains": [
+#   {"chain": "Aff: Climate → Neg: Turn it → Aff: Extend UQ", "length": 3, "final_speaker": "Aff"},
+#   ...
+# ]
+# ---
+# 4. Argument Preservation
+# Count how many times each side extended arguments — that is, repeated or built on the same argument in their next speech. List the arguments that were extended and how many times they appeared.
+# Example:
+# "aff_preserved": {
+#   "Nuclear War": 3,
+#   "Climate Impact": 2
+# }
+# Return all your findings in structured JSON format with four top-level fields:
+# -uli_arguments
+# -response_coverage
+# -clash_chains
+# -preservation
 
-    """
-    )
+#     """
+#     )
 
 
-## Flow Bot ##
-flow = Agent(
-    model="openai:gpt-3.5-turbo",
-    system_prompt="""
-You are FlowBot, a debate assistant.
+# ## Flow Bot ##
+# flow = Agent(
+#     model="openai:gpt-3.5-turbo",
+#     system_prompt="""
+# You are FlowBot, a debate assistant.
 
-You maintain two tables:
-1. AFF Flow Table with these columns:
-   - aff_constructive, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
-2. NEG Flow Table with these columns:
-   - neg_constructive, aff_rebuttal, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
+# You maintain two tables:
+# 1. AFF Flow Table with these columns:
+#    - aff_constructive, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
+# 2. NEG Flow Table with these columns:
+#    - neg_constructive, aff_rebuttal, neg_rebuttal, aff_summary, neg_summary, aff_final_focus, neg_final_focus
 
-For each speech, you will receive:
-- Instructions for updating only one column of each table
-- The current state of the flow tables
-- The current speech text
+# For each speech, you will receive:
+# - Instructions for updating only one column of each table
+# - The current state of the flow tables
+# - The current speech text
 
-You must return both tables, fully preserving previous content and only modifying the relevant column based on the instructions.
+# You must return both tables, fully preserving previous content and only modifying the relevant column based on the instructions.
 
-Return ONLY a JSON object like:
-{
-  "aff_flow": [ ... ],
-  "neg_flow": [ ... ]
-}
-"""
-)
+# Return ONLY a JSON object like:
+# {
+#   "aff_flow": [ ... ],
+#   "neg_flow": [ ... ]
+# }
+# """
+# )
